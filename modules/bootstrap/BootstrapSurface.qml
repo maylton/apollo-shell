@@ -3,21 +3,21 @@ import Quickshell
 import "../../config" as AppConfig
 import "../../core" as Core
 import "../../theme" as Tokens
+import "../../components/surfaces" as Surfaces
 
 PanelWindow {
     id: root
 
     readonly property real scaleFactor: Tokens.Theme.scale
     readonly property string monitorName: screen ? screen.name : "unknown"
-    readonly property var palette: Tokens.Theme.colors
 
-    Component.onCompleted: Core.Logger.info(Core.Constants.shellCategory, "Theme preview surface created", {
+    Component.onCompleted: Core.Logger.info(Core.Constants.componentsCategory, "Component gallery surface created", {
         screen: monitorName,
         scale: scaleFactor,
         theme: Tokens.Theme.modeName
     })
 
-    Component.onDestruction: Core.Logger.debug(Core.Constants.shellCategory, "Theme preview surface destroyed", {
+    Component.onDestruction: Core.Logger.debug(Core.Constants.componentsCategory, "Component gallery surface destroyed", {
         screen: monitorName
     })
 
@@ -40,23 +40,12 @@ PanelWindow {
     color: "transparent"
     surfaceFormat.opaque: false
 
-    Rectangle {
+    Surfaces.ApolloPanel {
         anchors.fill: parent
-        radius: Tokens.Theme.scaled(Tokens.Theme.shapes.extraLarge)
-        color: root.palette.glassSurfaceStrong
-        border.width: 1
-        border.color: root.palette.outlineVariant
-
-        Behavior on color {
-            ColorAnimation {
-                duration: Tokens.Theme.animationDuration(Tokens.Theme.motion.normal)
-                easing.type: Tokens.Theme.motion.standardCurve
-            }
-        }
+        contentPadding: Tokens.Theme.scaled(Tokens.Theme.spacing.xLarge)
 
         ThemePreview {
             anchors.fill: parent
-            anchors.margins: Tokens.Theme.scaled(Tokens.Theme.spacing.xLarge)
             monitorName: root.monitorName
         }
     }
