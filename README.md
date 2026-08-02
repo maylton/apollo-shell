@@ -4,7 +4,7 @@ Apollo Shell é um shell moderno e modular para Hyprland, desenvolvido com [Quic
 
 ## Estado do projeto
 
-Os Marcos 1 e 2 estabelecem a fundação técnica e o sistema visual compartilhado da primeira versão testável. A implementação atual inclui runtime, configuração central, logging, tokens semânticos e uma galeria temporária para validar os temas claro e escuro.
+Os Marcos 1, 2 e 3 estabelecem a fundação técnica, o sistema visual compartilhado e a biblioteca de componentes primitivos da primeira versão testável. A implementação atual inclui runtime, configuração central, logging, tokens semânticos e componentes reutilizáveis para superfícies, botões, controles, layouts e feedback.
 
 ## Princípios
 
@@ -51,7 +51,8 @@ O script de desenvolvimento adiciona os metadados locais do Apollo ao `XDG_DATA_
 - [Desenvolvimento](docs/DEVELOPMENT.md)
 - [Status do Marco 1](docs/MILESTONE-1.md)
 - [Status do Marco 2](docs/MILESTONE-2.md)
+- [Status do Marco 3](docs/MILESTONE-3.md)
 
 ## Escopo atual
 
-A implementação atual cobre a estrutura do projeto, entrada do Quickshell, configuração central, logging e o sistema visual compartilhado. A superfície exibida no canto da tela é apenas uma galeria técnica temporária. Widgets soltos diretamente no desktop não fazem parte desta versão.
+A implementação atual cobre a estrutura do projeto, o sistema visual e a biblioteca de primitivas. A superfície exibida no canto da tela é uma galeria técnica temporária que exercita os componentes antes da construção dos painéis reais. Widgets soltos diretamente no desktop não fazem parte desta versão.
