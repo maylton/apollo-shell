@@ -11,7 +11,7 @@ Item {
     readonly property var shapes: Tokens.Theme.shapes
     readonly property var spacing: Tokens.Theme.spacing
     readonly property real scaleFactor: Tokens.Theme.scale
-    readonly property string monitorName: "unknown"
+    property string monitorName: "unknown"
 
     ColumnLayout {
         anchors.fill: parent
