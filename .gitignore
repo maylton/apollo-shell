@@ -1,0 +1,22 @@
+# Quickshell / QML language server
+.qmlls.ini
+
+# Local state and logs
+*.log
+.cache/
+.local/
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build and packaging outputs
+build/
+dist/
+*.pkg.tar.zst
+
+# OS metadata
+.DS_Store
+Thumbs.db
