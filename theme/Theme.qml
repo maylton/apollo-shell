@@ -7,7 +7,63 @@ import "../core" as Core
 Singleton {
     id: root
 
-    readonly property var colors: Colors
+    // Expose a plain reactive palette object instead of forwarding the
+    // Colors singleton directly. Qt bindings reliably track every role,
+    // including semantic names that begin with "on".
+    readonly property var colors: ({
+        background: Colors.background,
+        onBackground: Colors["onBackground"],
+        surface: Colors.surface,
+        surfaceDim: Colors.surfaceDim,
+        surfaceBright: Colors.surfaceBright,
+        surfaceContainerLowest: Colors.surfaceContainerLowest,
+        surfaceContainerLow: Colors.surfaceContainerLow,
+        surfaceContainer: Colors.surfaceContainer,
+        surfaceContainerHigh: Colors.surfaceContainerHigh,
+        surfaceContainerHighest: Colors.surfaceContainerHighest,
+        onSurface: Colors["onSurface"],
+        onSurfaceVariant: Colors["onSurfaceVariant"],
+        primary: Colors.primary,
+        onPrimary: Colors["onPrimary"],
+        primaryContainer: Colors.primaryContainer,
+        onPrimaryContainer: Colors["onPrimaryContainer"],
+        secondary: Colors.secondary,
+        onSecondary: Colors["onSecondary"],
+        secondaryContainer: Colors.secondaryContainer,
+        onSecondaryContainer: Colors["onSecondaryContainer"],
+        tertiary: Colors.tertiary,
+        onTertiary: Colors["onTertiary"],
+        tertiaryContainer: Colors.tertiaryContainer,
+        onTertiaryContainer: Colors["onTertiaryContainer"],
+        error: Colors.error,
+        onError: Colors["onError"],
+        errorContainer: Colors.errorContainer,
+        onErrorContainer: Colors["onErrorContainer"],
+        outline: Colors.outline,
+        outlineVariant: Colors.outlineVariant,
+        shadow: Colors.shadow,
+        scrim: Colors.scrim,
+        inverseSurface: Colors.inverseSurface,
+        inverseOnSurface: Colors.inverseOnSurface,
+        inversePrimary: Colors.inversePrimary,
+        lavender: Colors.lavender,
+        pink: Colors.pink,
+        peach: Colors.peach,
+        plum: Colors.plum,
+        mint: Colors.mint,
+        glassSurface: Colors.glassSurface,
+        glassSurfaceStrong: Colors.glassSurfaceStrong,
+        activeIndicator: Colors.activeIndicator,
+        inactiveIndicator: Colors.inactiveIndicator,
+        success: Colors.success,
+        warning: Colors.warning,
+        info: Colors.info,
+        stateHover: Colors.stateHover,
+        stateFocus: Colors.stateFocus,
+        statePressed: Colors.statePressed,
+        stateDragged: Colors.stateDragged
+    })
+
     readonly property var typography: Typography
     readonly property var shapes: Shapes
     readonly property var spacing: Spacing

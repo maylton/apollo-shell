@@ -2,192 +2,335 @@ import QtQuick
 import QtQuick.Layouts
 import "../../core" as Core
 import "../../theme" as Tokens
+import "../../components/surfaces" as Surfaces
+import "../../components/buttons" as Buttons
+import "../../components/controls" as Controls
+import "../../components/layout" as ApolloLayout
+import "../../components/feedback" as Feedback
 
 Item {
     id: root
 
-    readonly property var palette: Tokens.Theme.colors
-    readonly property var type: Tokens.Theme.typography
-    readonly property var shapes: Tokens.Theme.shapes
-    readonly property var spacing: Tokens.Theme.spacing
-    readonly property real scaleFactor: Tokens.Theme.scale
     property string monitorName: "unknown"
+    property bool popupOpen: true
+    property bool tooltipShown: true
+    property real sliderValue: 0.62
+    property int segmentIndex: 1
 
-    ColumnLayout {
+    Flickable {
+        id: viewport
+
         anchors.fill: parent
-        spacing: Tokens.Theme.scaled(root.spacing.medium)
+        clip: true
+        contentWidth: width
+        contentHeight: gallery.implicitHeight
+        boundsBehavior: Flickable.StopAtBounds
 
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: Tokens.Theme.scaled(root.spacing.medium)
+        ApolloLayout.ApolloColumn {
+            id: gallery
 
-            ColumnLayout {
+            width: viewport.width
+            spacing: Tokens.Theme.scaled(Tokens.Theme.spacing.xLarge)
+
+            ApolloLayout.ApolloRow {
                 Layout.fillWidth: true
-                spacing: Tokens.Theme.scaled(root.spacing.xxxSmall)
 
-                Text {
+                ApolloLayout.ApolloColumn {
                     Layout.fillWidth: true
-                    text: Core.Apollo.displayName
-                    color: root.palette.onSurface
-                    font.family: root.type.titleLarge.family
-                    font.pixelSize: Tokens.Theme.scaled(root.type.titleLarge.pixelSize)
-                    font.weight: root.type.titleLarge.weight
-                    font.letterSpacing: root.type.titleLarge.letterSpacing
-                    elide: Text.ElideRight
-                }
-
-                Text {
-                    Layout.fillWidth: true
-                    text: "Material 3 Expressive • " + root.monitorName
-                    color: root.palette.onSurfaceVariant
-                    font.family: root.type.bodySmall.family
-                    font.pixelSize: Tokens.Theme.scaled(root.type.bodySmall.pixelSize)
-                    font.weight: root.type.bodySmall.weight
-                    font.letterSpacing: root.type.bodySmall.letterSpacing
-                    elide: Text.ElideRight
-                }
-            }
-
-            Rectangle {
-                Layout.preferredHeight: Tokens.Theme.scaled(32)
-                Layout.preferredWidth: modeLabel.implicitWidth + Tokens.Theme.scaled(root.spacing.large * 2)
-                radius: root.shapes.pill
-                color: root.palette.primaryContainer
-
-                Text {
-                    id: modeLabel
-
-                    anchors.centerIn: parent
-                    text: Tokens.Theme.modeName.toUpperCase()
-                    color: root.palette.onPrimaryContainer
-                    font.family: root.type.labelSmall.family
-                    font.pixelSize: Tokens.Theme.scaled(root.type.labelSmall.pixelSize)
-                    font.weight: Font.DemiBold
-                    font.letterSpacing: 0.8
-                }
-            }
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: Tokens.Theme.scaled(root.spacing.small)
-
-            Repeater {
-                model: [
-                    { label: "Primary", value: root.palette.primary },
-                    { label: "Pink", value: root.palette.pink },
-                    { label: "Peach", value: root.palette.peach },
-                    { label: "Mint", value: root.palette.mint }
-                ]
-
-                delegate: ColumnLayout {
-                    required property var modelData
-
-                    Layout.fillWidth: true
-                    spacing: Tokens.Theme.scaled(root.spacing.xxSmall)
-
-                    Rectangle {
-                        Layout.alignment: Qt.AlignHCenter
-                        Layout.preferredWidth: Tokens.Theme.scaled(52)
-                        Layout.preferredHeight: Tokens.Theme.scaled(52)
-                        radius: root.shapes.circle
-                        color: modelData.value
-                        border.width: 1
-                        border.color: root.palette.outlineVariant
-                    }
-
-                    Text {
-                        Layout.alignment: Qt.AlignHCenter
-                        text: modelData.label
-                        color: root.palette.onSurfaceVariant
-                        font.family: root.type.labelSmall.family
-                        font.pixelSize: Tokens.Theme.scaled(root.type.labelSmall.pixelSize)
-                        font.weight: root.type.labelSmall.weight
-                    }
-                }
-            }
-        }
-
-        Rectangle {
-            Layout.fillWidth: true
-            Layout.preferredHeight: Tokens.Theme.scaled(70)
-            radius: root.shapes.large
-            color: root.palette.surfaceContainerHigh
-
-            RowLayout {
-                anchors.fill: parent
-                anchors.margins: Tokens.Theme.scaled(root.spacing.large)
-                spacing: Tokens.Theme.scaled(root.spacing.large)
-
-                Rectangle {
-                    Layout.preferredWidth: Tokens.Theme.scaled(42)
-                    Layout.preferredHeight: Tokens.Theme.scaled(42)
-                    radius: root.shapes.medium
-                    color: root.palette.secondaryContainer
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "A"
-                        color: root.palette.onSecondaryContainer
-                        font.family: root.type.headlineMedium.family
-                        font.pixelSize: Tokens.Theme.scaled(24)
-                        font.weight: Font.Medium
-                    }
-                }
-
-                ColumnLayout {
-                    Layout.fillWidth: true
-                    spacing: Tokens.Theme.scaled(root.spacing.xxxSmall)
+                    spacing: Tokens.Theme.scaled(Tokens.Theme.spacing.xxxSmall)
 
                     Text {
                         Layout.fillWidth: true
-                        text: "Shared visual foundation"
-                        color: root.palette.onSurface
-                        font.family: root.type.titleMedium.family
-                        font.pixelSize: Tokens.Theme.scaled(root.type.titleMedium.pixelSize)
-                        font.weight: root.type.titleMedium.weight
+                        text: Core.Apollo.displayName
+                        color: Tokens.Theme.colors.onSurface
+                        font.family: Tokens.Theme.typography.titleLarge.family
+                        font.pixelSize: Tokens.Theme.scaled(Tokens.Theme.typography.titleLarge.pixelSize)
+                        font.weight: Tokens.Theme.typography.titleLarge.weight
                         elide: Text.ElideRight
                     }
 
                     Text {
                         Layout.fillWidth: true
-                        text: "Colors, typography, shape, spacing, elevation and motion"
-                        color: root.palette.onSurfaceVariant
-                        font.family: root.type.bodySmall.family
-                        font.pixelSize: Tokens.Theme.scaled(root.type.bodySmall.pixelSize)
-                        font.weight: root.type.bodySmall.weight
+                        text: "Primitive components • " + root.monitorName
+                        color: Tokens.Theme.colors.onSurfaceVariant
+                        font.family: Tokens.Theme.typography.bodySmall.family
+                        font.pixelSize: Tokens.Theme.scaled(Tokens.Theme.typography.bodySmall.pixelSize)
                         elide: Text.ElideRight
                     }
                 }
+
+                ApolloLayout.ApolloSpacer {}
+
+                Buttons.ApolloPillButton {
+                    text: Tokens.Theme.modeName
+                    iconText: Tokens.Theme.dark ? "☾" : "☀"
+                    checkable: true
+                    checked: Tokens.Theme.dark
+                    onClicked: Tokens.Theme.toggleDarkMode()
+                }
             }
-        }
 
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: Tokens.Theme.scaled(root.spacing.small)
+            ApolloLayout.ApolloSection {
+                Layout.fillWidth: true
+                title: "Surfaces"
+                subtitle: "Shared containers replace repeated colors, borders, radii and padding."
 
-            Repeater {
-                model: [
-                    root.spacing.minimumTouchTarget + " px touch",
-                    root.shapes.extraLarge + " px radius",
-                    Tokens.Theme.motion.normal + " ms motion"
-                ]
-
-                delegate: Rectangle {
-                    required property string modelData
-
+                ApolloLayout.ApolloGrid {
                     Layout.fillWidth: true
-                    Layout.preferredHeight: Tokens.Theme.scaled(30)
-                    radius: root.shapes.pill
-                    color: root.palette.surfaceContainerHighest
+                    columns: 3
 
-                    Text {
-                        anchors.centerIn: parent
-                        text: modelData
-                        color: root.palette.onSurfaceVariant
-                        font.family: root.type.labelSmall.family
-                        font.pixelSize: Tokens.Theme.scaled(root.type.labelSmall.pixelSize)
-                        font.weight: root.type.labelSmall.weight
+                    Surfaces.ApolloSurface {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: Tokens.Theme.scaled(112)
+                        surfaceColor: Tokens.Theme.colors.surfaceContainerLow
+
+                        Text {
+                            anchors.centerIn: parent
+                            text: "Surface"
+                            color: Tokens.Theme.colors.onSurface
+                            font.family: Tokens.Theme.typography.labelLarge.family
+                            font.pixelSize: Tokens.Theme.scaled(Tokens.Theme.typography.labelLarge.pixelSize)
+                        }
+                    }
+
+                    Surfaces.ApolloCard {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: Tokens.Theme.scaled(112)
+
+                        ApolloLayout.ApolloColumn {
+                            anchors.centerIn: parent
+                            spacing: Tokens.Theme.scaled(Tokens.Theme.spacing.xxSmall)
+
+                            Text {
+                                Layout.alignment: Qt.AlignHCenter
+                                text: "Card"
+                                color: Tokens.Theme.colors.onSurface
+                                font.family: Tokens.Theme.typography.labelLarge.family
+                                font.pixelSize: Tokens.Theme.scaled(Tokens.Theme.typography.labelLarge.pixelSize)
+                            }
+
+                            Feedback.ApolloLoadingIndicator {
+                                Layout.alignment: Qt.AlignHCenter
+                            }
+                        }
+                    }
+
+                    Surfaces.ApolloPopup {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: Tokens.Theme.scaled(112)
+                        open: root.popupOpen
+
+                        ApolloLayout.ApolloColumn {
+                            anchors.centerIn: parent
+                            spacing: Tokens.Theme.scaled(Tokens.Theme.spacing.xxSmall)
+
+                            Text {
+                                Layout.alignment: Qt.AlignHCenter
+                                text: "Popup"
+                                color: Tokens.Theme.colors.onSurface
+                                font.family: Tokens.Theme.typography.labelLarge.family
+                                font.pixelSize: Tokens.Theme.scaled(Tokens.Theme.typography.labelLarge.pixelSize)
+                            }
+
+                            Buttons.ApolloPillButton {
+                                Layout.alignment: Qt.AlignHCenter
+                                text: root.popupOpen ? "Hide" : "Show"
+                                onClicked: root.popupOpen = !root.popupOpen
+                            }
+                        }
+                    }
+
+                    Surfaces.ApolloCard {
+                        Layout.columnSpan: 3
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: Tokens.Theme.scaled(84)
+                        contentPadding: 0
+
+                        Text {
+                            anchors.centerIn: parent
+                            z: 2
+                            text: "Scrim preview"
+                            color: Tokens.Theme.colors.inverseOnSurface
+                            font.family: Tokens.Theme.typography.labelLarge.family
+                            font.pixelSize: Tokens.Theme.scaled(Tokens.Theme.typography.labelLarge.pixelSize)
+                        }
+
+                        Surfaces.ApolloScrim {
+                            anchors.fill: parent
+                            active: true
+                            closeOnClick: false
+                            z: 1
+                        }
+                    }
+                }
+            }
+
+            ApolloLayout.ApolloSection {
+                Layout.fillWidth: true
+                title: "Buttons"
+                subtitle: "The same interaction states are shared by text, icon, pill and app buttons."
+
+                ApolloLayout.ApolloRow {
+                    Layout.fillWidth: true
+
+                    Buttons.ApolloButton {
+                        text: "Primary action"
+                        iconText: "+"
+                        selected: true
+                    }
+
+                    Buttons.ApolloPillButton {
+                        text: "Tonal pill"
+                        iconText: "◆"
+                    }
+
+                    Buttons.ApolloIconButton {
+                        iconText: "⋮"
+                    }
+
+                    Buttons.ApolloAppButton {
+                        name: "Apollo"
+                        iconText: "A"
+                        running: true
+                        active: true
+                    }
+
+                    ApolloLayout.ApolloSpacer {}
+
+                    Feedback.ApolloTooltip {
+                        text: "Reusable tooltip"
+                        shown: root.tooltipShown
+                    }
+                }
+            }
+
+            ApolloLayout.ApolloSection {
+                Layout.fillWidth: true
+                title: "Controls"
+                subtitle: "Interactive values use one visual language and react to the global theme."
+
+                Surfaces.ApolloCard {
+                    Layout.fillWidth: true
+
+                    ApolloLayout.ApolloColumn {
+                        anchors.fill: parent
+
+                        ApolloLayout.ApolloRow {
+                            Layout.fillWidth: true
+
+                            Text {
+                                text: "Wi-Fi"
+                                color: Tokens.Theme.colors.onSurface
+                                font.family: Tokens.Theme.typography.titleMedium.family
+                                font.pixelSize: Tokens.Theme.scaled(Tokens.Theme.typography.titleMedium.pixelSize)
+                            }
+
+                            ApolloLayout.ApolloSpacer {}
+
+                            Controls.ApolloToggle {
+                                checked: true
+                            }
+                        }
+
+                        Controls.ApolloSlider {
+                            Layout.fillWidth: true
+                            value: root.sliderValue
+                            onMoved: nextValue => root.sliderValue = nextValue
+                        }
+
+                        Controls.ApolloProgress {
+                            Layout.fillWidth: true
+                            value: root.sliderValue
+                        }
+
+                        Controls.ApolloSegmentedControl {
+                            Layout.fillWidth: true
+                            model: ["Compact", "Standard", "Expanded"]
+                            currentIndex: root.segmentIndex
+                            onActivated: (index, label) => root.segmentIndex = index
+                        }
+                    }
+                }
+            }
+
+            ApolloLayout.ApolloSection {
+                Layout.fillWidth: true
+                title: "Layout and feedback"
+                subtitle: "Sections, grids, rows, columns, spacers and feedback states compose without custom spacing."
+
+                ApolloLayout.ApolloGrid {
+                    Layout.fillWidth: true
+                    columns: 2
+
+                    Surfaces.ApolloCard {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: Tokens.Theme.scaled(190)
+
+                        ApolloLayout.ApolloGrid {
+                            anchors.fill: parent
+                            columns: 2
+
+                            Repeater {
+                                model: ["S", "M", "L", "XL"]
+
+                                delegate: Surfaces.ApolloSurface {
+                                    required property string modelData
+
+                                    Layout.fillWidth: true
+                                    Layout.fillHeight: true
+                                    contentPadding: Tokens.Theme.scaled(Tokens.Theme.spacing.small)
+                                    cornerRadius: Tokens.Theme.scaled(Tokens.Theme.shapes.medium)
+                                    surfaceColor: Tokens.Theme.colors.secondaryContainer
+
+                                    Text {
+                                        anchors.centerIn: parent
+                                        text: modelData
+                                        color: Tokens.Theme.colors.onSecondaryContainer
+                                        font.family: Tokens.Theme.typography.labelLarge.family
+                                        font.pixelSize: Tokens.Theme.scaled(Tokens.Theme.typography.labelLarge.pixelSize)
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    Surfaces.ApolloCard {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: Tokens.Theme.scaled(190)
+
+                        Feedback.ApolloEmptyState {
+                            anchors.fill: parent
+                            iconText: "☆"
+                            title: "Component ready"
+                            description: "This state can be reused by every future module."
+                            actionText: "Action"
+                        }
+                    }
+
+                    Surfaces.ApolloCard {
+                        Layout.columnSpan: 2
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: Tokens.Theme.scaled(76)
+                        contentPadding: 0
+
+                        Text {
+                            anchors.centerIn: parent
+                            text: "Click for ripple feedback"
+                            color: Tokens.Theme.colors.onSurface
+                            font.family: Tokens.Theme.typography.labelLarge.family
+                            font.pixelSize: Tokens.Theme.scaled(Tokens.Theme.typography.labelLarge.pixelSize)
+                        }
+
+                        Feedback.ApolloRipple {
+                            id: ripple
+                            anchors.fill: parent
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onPressed: mouse => ripple.trigger(mouse.x, mouse.y)
+                        }
                     }
                 }
             }

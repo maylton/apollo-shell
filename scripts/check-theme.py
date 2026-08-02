@@ -92,9 +92,7 @@ def validate_known_type_imports(relative_path: str, content: str) -> None:
     )
 
     if uses_connections and not imports_connections_module:
-        fail(
-            f"{relative_path} usa Connections sem importar QtQml ou QtQuick"
-        )
+        fail(f"{relative_path} usa Connections sem importar QtQml ou QtQuick")
 
     uses_qt_object = re.search(r"\bQtObject\s*\{", content) is not None
     imports_qt_object_module = (
@@ -103,9 +101,7 @@ def validate_known_type_imports(relative_path: str, content: str) -> None:
     )
 
     if uses_qt_object and not imports_qt_object_module:
-        fail(
-            f"{relative_path} usa QtObject sem importar QtQml ou QtQuick"
-        )
+        fail(f"{relative_path} usa QtObject sem importar QtQml ou QtQuick")
 
 
 for filename, required_tokens in SINGLETONS.items():
@@ -144,14 +140,19 @@ for relative_path, content in (
     if re.search(r"#[0-9A-Fa-f]{6,8}", content):
         fail(f"{relative_path} contém cor hexadecimal fora de theme/Colors.qml")
 
-if "Tokens.Theme.colors" not in bootstrap:
-    fail("BootstrapSurface.qml não consome a paleta compartilhada")
-if "Tokens.Theme.typography" not in preview:
-    fail("ThemePreview.qml não consome tipografia compartilhada")
-if "Tokens.Theme.shapes" not in preview:
-    fail("ThemePreview.qml não consome formas compartilhadas")
-if "Tokens.Theme.spacing" not in preview:
-    fail("ThemePreview.qml não consome espaçamento compartilhado")
+if 'import "../../components/surfaces" as Surfaces' not in bootstrap:
+    fail("BootstrapSurface.qml não importa as superfícies primitivas")
+if "Surfaces.ApolloPanel" not in bootstrap:
+    fail("BootstrapSurface.qml não é composto por ApolloPanel")
+
+for token_group in (
+    "Tokens.Theme.colors",
+    "Tokens.Theme.typography",
+    "Tokens.Theme.shapes",
+    "Tokens.Theme.spacing",
+):
+    if token_group not in preview:
+        fail(f"ThemePreview.qml não consome {token_group}")
 
 metadata = read("data/applications/io.github.maylton.apollo-shell.desktop")
 if "Name=Apollo Shell" not in metadata:
@@ -161,5 +162,5 @@ if "Exec=qs -c apollo-shell" not in metadata:
 
 print(
     "[APOLLO][THEME-CHECK] Sistema visual validado: "
-    f"{len(SINGLETONS)} singletons e galeria sem estilos duplicados"
+    f"{len(SINGLETONS)} singletons e composição baseada em tokens"
 )
