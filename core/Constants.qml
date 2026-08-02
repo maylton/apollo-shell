@@ -12,7 +12,7 @@ Singleton {
     readonly property int minimumQuickshellMinor: 3
 
     readonly property int bootstrapWidth: 420
-    readonly property int bootstrapHeight: 276
+    readonly property int bootstrapHeight: 316
     readonly property int bootstrapMargin: 24
     readonly property int bootstrapRadius: 28
 
