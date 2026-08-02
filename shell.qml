@@ -3,10 +3,13 @@
 
 import QtQuick
 import Quickshell
+import "core" as Core
 import "modules/bootstrap" as Bootstrap
 
 ShellRoot {
     id: root
+
+    Component.onCompleted: Core.Apollo.initialize()
 
     Variants {
         model: Quickshell.screens
