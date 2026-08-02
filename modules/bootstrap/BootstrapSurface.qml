@@ -54,13 +54,6 @@ PanelWindow {
             }
         }
 
-        Behavior on border.color {
-            ColorAnimation {
-                duration: Tokens.Theme.animationDuration(Tokens.Theme.motion.normal)
-                easing.type: Tokens.Theme.motion.standardCurve
-            }
-        }
-
         ThemePreview {
             anchors.fill: parent
             anchors.margins: Tokens.Theme.scaled(Tokens.Theme.spacing.xLarge)
