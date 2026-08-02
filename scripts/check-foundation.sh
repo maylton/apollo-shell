@@ -23,7 +23,18 @@ readonly REQUIRED_FILES=(
     "core/Paths.qml"
     "config/Config.qml"
     "config/defaults.json"
+    "theme/Colors.qml"
+    "theme/Typography.qml"
+    "theme/Shapes.qml"
+    "theme/Spacing.qml"
+    "theme/Elevation.qml"
+    "theme/Motion.qml"
+    "theme/Theme.qml"
+    "theme/qmldir"
     "modules/bootstrap/BootstrapSurface.qml"
+    "modules/bootstrap/ThemePreview.qml"
+    "data/applications/io.github.maylton.apollo-shell.desktop"
+    "scripts/check-theme.py"
     "scripts/run-dev.sh"
 )
 
@@ -37,9 +48,10 @@ command -v python3 >/dev/null 2>&1 || fail "python3 é necessário para validar 
 log "Validando JSON"
 python3 -m json.tool "${PROJECT_ROOT}/config/defaults.json" >/dev/null
 
-log "Validando scripts Bash"
+log "Validando scripts"
 bash -n "${PROJECT_ROOT}/scripts/run-dev.sh"
 bash -n "${PROJECT_ROOT}/scripts/check-foundation.sh"
+python3 -m py_compile "${PROJECT_ROOT}/scripts/check-theme.py"
 
 log "Verificando delimitadores básicos dos arquivos QML"
 python3 - "${PROJECT_ROOT}" <<'PY'
@@ -138,6 +150,9 @@ if failures:
 print(f"Validated {len(qml_files)} QML files")
 PY
 
+log "Validando sistema de tokens"
+python3 "${PROJECT_ROOT}/scripts/check-theme.py"
+
 if [[ "${APOLLO_RUNTIME_CHECK:-0}" == "1" ]]; then
     command -v qs >/dev/null 2>&1 || fail "Quickshell não foi encontrado para o teste de execução."
     command -v timeout >/dev/null 2>&1 || fail "O comando 'timeout' é necessário para o teste de execução."
@@ -147,7 +162,7 @@ if [[ "${APOLLO_RUNTIME_CHECK:-0}" == "1" ]]; then
     log "Executando teste do Quickshell por ${RUNTIME_TIMEOUT}s"
 
     set +e
-    timeout "${RUNTIME_TIMEOUT}s" qs -p "${PROJECT_ROOT}/shell.qml"
+    timeout "${RUNTIME_TIMEOUT}s" "${PROJECT_ROOT}/scripts/run-dev.sh"
     runtime_status=$?
     set -e
 
@@ -156,4 +171,4 @@ if [[ "${APOLLO_RUNTIME_CHECK:-0}" == "1" ]]; then
     fi
 fi
 
-log "Marco 1 validado com sucesso"
+log "Marcos 1 e 2 validados com sucesso"
