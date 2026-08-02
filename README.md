@@ -4,7 +4,7 @@ Apollo Shell é um shell moderno e modular para Hyprland, desenvolvido com [Quic
 
 ## Estado do projeto
 
-O projeto está em desenvolvimento inicial. A branch `feat/milestone-1-foundation` implementa a fundação técnica da primeira versão testável.
+O projeto está em desenvolvimento inicial. O Marco 1 estabelece a fundação técnica da primeira versão testável.
 
 ## Princípios
 
@@ -21,8 +21,15 @@ O projeto está em desenvolvimento inicial. A branch `feat/milestone-1-foundatio
 - Hyprland.
 - Quickshell 0.3 ou superior.
 - Qt 6 fornecido pela instalação do Quickshell.
+- Python 3 para as verificações estáticas.
 
 No Arch Linux e derivados, a versão estável do Quickshell pode ser instalada pelo pacote `quickshell`.
+
+## Validar
+
+```bash
+./scripts/check-foundation.sh
+```
 
 ## Executar
 
@@ -39,7 +46,9 @@ qs -p ./shell.qml
 ## Documentação
 
 - [Roadmap da v0.1](docs/ROADMAP.md)
+- [Desenvolvimento](docs/DEVELOPMENT.md)
+- [Status do Marco 1](docs/MILESTONE-1.md)
 
 ## Escopo atual
 
-A primeira etapa cobre a estrutura do projeto, a entrada do Quickshell, configuração central, logging e uma pequena superfície de diagnóstico. Widgets soltos diretamente no desktop não fazem parte desta versão.
+A primeira etapa cobre a estrutura do projeto, entrada do Quickshell, configuração central, logging e uma pequena superfície de diagnóstico. Widgets soltos diretamente no desktop não fazem parte desta versão.
