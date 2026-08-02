@@ -4,7 +4,7 @@ import "../../theme" as Tokens
 Rectangle {
     id: root
 
-    signal dismissed
+    signal dismissed()
 
     property bool active: false
     property bool closeOnClick: true
