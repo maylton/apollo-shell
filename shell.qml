@@ -11,6 +11,20 @@ ShellRoot {
 
     Component.onCompleted: Core.Apollo.initialize()
 
+    Connections {
+        target: Quickshell
+
+        function onReloadCompleted() {
+            Core.Logger.info(Core.Constants.shellCategory, "Quickshell reload completed")
+        }
+
+        function onReloadFailed(errorString) {
+            Core.Logger.error(Core.Constants.shellCategory, "Quickshell reload failed", {
+                error: errorString
+            })
+        }
+    }
+
     Variants {
         model: Quickshell.screens
 

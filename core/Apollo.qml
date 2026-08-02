@@ -18,11 +18,21 @@ Singleton {
     property date startedAt
 
     function initialize() {
-        if (initialized)
+        if (initialized) {
+            Logger.debug(Constants.shellCategory, "Initialization request ignored; runtime already initialized")
             return
+        }
 
         Quickshell.watchFiles = AppConfig.Config.hotReloadEnabled
         startedAt = new Date()
         initialized = true
+
+        Logger.info(Constants.shellCategory, "Apollo Shell runtime initialized", {
+            version: version,
+            screens: screenCount,
+            shellRoot: Paths.shellRoot,
+            hotReload: Quickshell.watchFiles,
+            debug: AppConfig.Config.debugLogging
+        })
     }
 }

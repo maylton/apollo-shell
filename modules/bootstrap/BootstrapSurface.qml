@@ -14,6 +14,15 @@ PanelWindow {
     readonly property color primaryTextColor: AppConfig.Config.darkMode ? "#F8EFFF" : "#2A1730"
     readonly property color secondaryTextColor: AppConfig.Config.darkMode ? "#D6C2DB" : "#6B5A70"
 
+    Component.onCompleted: Core.Logger.info(Core.Constants.shellCategory, "Bootstrap surface created", {
+        screen: monitorName,
+        scale: scaleFactor
+    })
+
+    Component.onDestruction: Core.Logger.debug(Core.Constants.shellCategory, "Bootstrap surface destroyed", {
+        screen: monitorName
+    })
+
     anchors {
         top: true
         left: true
