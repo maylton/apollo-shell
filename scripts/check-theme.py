@@ -64,6 +64,7 @@ SINGLETONS = {
         "spacing",
         "elevation",
         "motion",
+        "onDarkChanged",
         "toggleDarkMode",
         "scaled",
     ],
@@ -82,6 +83,31 @@ def read(relative_path: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
+def validate_known_type_imports(relative_path: str, content: str) -> None:
+    """Catch common runtime-only failures missed by delimiter checks."""
+    uses_connections = re.search(r"\bConnections\s*\{", content) is not None
+    imports_connections_module = (
+        re.search(r"^import\s+QtQml\b", content, re.MULTILINE) is not None
+        or re.search(r"^import\s+QtQuick\b", content, re.MULTILINE) is not None
+    )
+
+    if uses_connections and not imports_connections_module:
+        fail(
+            f"{relative_path} usa Connections sem importar QtQml ou QtQuick"
+        )
+
+    uses_qt_object = re.search(r"\bQtObject\s*\{", content) is not None
+    imports_qt_object_module = (
+        re.search(r"^import\s+QtQml\b", content, re.MULTILINE) is not None
+        or re.search(r"^import\s+QtQuick\b", content, re.MULTILINE) is not None
+    )
+
+    if uses_qt_object and not imports_qt_object_module:
+        fail(
+            f"{relative_path} usa QtObject sem importar QtQml ou QtQuick"
+        )
+
+
 for filename, required_tokens in SINGLETONS.items():
     relative_path = f"theme/{filename}"
     content = read(relative_path)
@@ -90,6 +116,8 @@ for filename, required_tokens in SINGLETONS.items():
         fail(f"{relative_path} não declara pragma Singleton")
     if not re.search(r"\bSingleton\s*\{", content):
         fail(f"{relative_path} não usa Singleton como raiz")
+
+    validate_known_type_imports(relative_path, content)
 
     for token in required_tokens:
         if not re.search(rf"\b{re.escape(token)}\b", content):
@@ -109,6 +137,8 @@ for relative_path, content in (
     ("modules/bootstrap/BootstrapSurface.qml", bootstrap),
     ("modules/bootstrap/ThemePreview.qml", preview),
 ):
+    validate_known_type_imports(relative_path, content)
+
     if 'import "../../theme" as Tokens' not in content:
         fail(f"{relative_path} não importa o sistema de tokens")
     if re.search(r"#[0-9A-Fa-f]{6,8}", content):
