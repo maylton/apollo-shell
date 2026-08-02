@@ -6,7 +6,7 @@ import "../buttons" as Buttons
 ColumnLayout {
     id: root
 
-    signal actionTriggered
+    signal actionTriggered()
 
     property string iconText: "?"
     property string title: "Nothing here yet"
