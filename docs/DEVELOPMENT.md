@@ -48,8 +48,11 @@ Ela confirma:
 - balanceamento básico de delimitadores QML;
 - registro dos singletons visuais;
 - presença dos tokens semânticos mínimos;
-- ausência de cores hexadecimais nos módulos de demonstração;
-- consumo compartilhado de cor, tipografia, formas e espaçamento.
+- registro de todos os componentes em seus respectivos `qmldir`;
+- ausência de cores hexadecimais fora do sistema visual;
+- independência dos componentes em relação a módulos e serviços;
+- imports obrigatórios para `MouseArea`, `Layout.*`, `Connections` e `QtObject`;
+- instanciação de todas as primitivas na galeria interna.
 
 Para realizar também um teste curto dentro de uma sessão Wayland:
 
@@ -92,7 +95,7 @@ theme/
 └── qmldir
 ```
 
-`Theme.qml` é o ponto de entrada. Componentes visuais devem importar o diretório e consumir os grupos compartilhados:
+`Theme.qml` é o ponto de entrada:
 
 ```qml
 import "../../theme" as Tokens
@@ -112,17 +115,104 @@ duration: Tokens.Theme.animationDuration(Tokens.Theme.motion.normal)
 
 Não replique cores, raios, espaçamentos, pesos tipográficos ou durações nos módulos. Um valor visual novo deve primeiro receber um papel semântico no sistema de tokens.
 
-## Tema claro e escuro
+## Biblioteca de componentes
 
-As propriedades de `Colors.qml` reagem a `Config.darkMode`. Durante esta fase, a troca pode ser testada alterando `config/defaults.json` enquanto o Apollo está em execução:
+As primitivas ficam organizadas por responsabilidade:
 
-```json
-{
-  "darkMode": true
+```text
+components/
+├── surfaces/
+│   ├── ApolloSurface.qml
+│   ├── ApolloCard.qml
+│   ├── ApolloPanel.qml
+│   ├── ApolloPopup.qml
+│   └── ApolloScrim.qml
+├── buttons/
+│   ├── ApolloButton.qml
+│   ├── ApolloIconButton.qml
+│   ├── ApolloPillButton.qml
+│   └── ApolloAppButton.qml
+├── controls/
+│   ├── ApolloToggle.qml
+│   ├── ApolloSlider.qml
+│   ├── ApolloProgress.qml
+│   └── ApolloSegmentedControl.qml
+├── layout/
+│   ├── ApolloRow.qml
+│   ├── ApolloColumn.qml
+│   ├── ApolloGrid.qml
+│   ├── ApolloSection.qml
+│   └── ApolloSpacer.qml
+└── feedback/
+    ├── ApolloTooltip.qml
+    ├── ApolloRipple.qml
+    ├── ApolloLoadingIndicator.qml
+    └── ApolloEmptyState.qml
+```
+
+Os módulos devem compor essas primitivas em vez de criar novos retângulos e interações para cada tela:
+
+```qml
+import "../../components/surfaces" as Surfaces
+import "../../components/buttons" as Buttons
+import "../../components/layout" as ApolloLayout
+
+Surfaces.ApolloCard {
+    ApolloLayout.ApolloRow {
+        anchors.fill: parent
+
+        Buttons.ApolloPillButton {
+            text: "Open"
+        }
+    }
 }
 ```
 
-O `FileView` recarrega o arquivo e as ligações QML atualizam a interface sem recriar os componentes. Controles futuros poderão chamar:
+### Limites de dependência
+
+Componentes podem depender de:
+
+- QtQuick e QtQuick.Layouts;
+- `theme/`;
+- componentes de uma camada primitiva equivalente.
+
+Componentes não devem importar:
+
+- `modules/`;
+- `services/`;
+- `models/`;
+- arquivos de configuração diretamente.
+
+Essa direção de dependência permite que dock, launcher, dashboard e central de controle reutilizem a mesma implementação sem ciclos.
+
+### Conteúdo de superfícies
+
+`ApolloSurface` expõe uma propriedade padrão para conteúdo. `ApolloCard`, `ApolloPanel` e `ApolloPopup` herdam esse comportamento:
+
+```qml
+Surfaces.ApolloCard {
+    Text {
+        anchors.centerIn: parent
+        text: "Reusable content"
+    }
+}
+```
+
+### Estados de interação
+
+Botões e controles devem oferecer estados coerentes para:
+
+- normal;
+- hover;
+- pressed;
+- active ou checked;
+- disabled.
+
+Novos estados visuais devem usar os papéis de estado definidos em `Colors.qml`.
+
+## Tema claro e escuro
+
+As propriedades de `Colors.qml` reagem a `Config.darkMode`. A galeria permite alternar o tema pelo botão no cabeçalho ou por edição de `config/defaults.json`.
 
 ```qml
 Tokens.Theme.toggleDarkMode()
@@ -132,46 +222,39 @@ Tokens.Theme.toggleDarkMode()
 
 Os papéis tipográficos expõem família, tamanho, peso, espaçamento entre letras e altura de linha. O Apollo prefere `Roboto Flex` para títulos expressivos e `Roboto` para textos. O Qt utiliza fallback quando essas fontes não estão instaladas.
 
-Exemplo:
-
-```qml
-Text {
-    font.family: Tokens.Theme.typography.titleLarge.family
-    font.pixelSize: Tokens.Theme.scaled(
-        Tokens.Theme.typography.titleLarge.pixelSize
-    )
-    font.weight: Tokens.Theme.typography.titleLarge.weight
-}
-```
-
 ## Logging
 
 Todos os logs internos devem passar por `core/Logger.qml`:
 
 ```qml
-Core.Logger.info(Core.Constants.themeCategory, "Color scheme changed", {
-    mode: Tokens.Theme.modeName
-})
+Core.Logger.info(Core.Constants.componentsCategory, "Component gallery ready")
 ```
 
 Formato produzido:
 
 ```text
-[APOLLO][THEME][INFO] Color scheme changed
+[APOLLO][COMPONENTS][INFO] Component gallery ready
 ```
 
 ## Galeria temporária
 
-`modules/bootstrap/ThemePreview.qml` demonstra os tokens em uma superfície sem zona exclusiva, sem foco e sem substituir elementos do Caelestia. Ela não representa um widget definitivo do desktop.
+`modules/bootstrap/ThemePreview.qml` agora é uma galeria interativa que instancia todas as primitivas. Ela permite verificar:
 
-A galeria será removida quando os componentes reutilizáveis do Marco 3 assumirem a validação visual.
+- composição das superfícies;
+- estados de botões;
+- toggle, slider, progresso e controle segmentado;
+- comportamento de layouts;
+- loading, tooltip, ripple e empty state;
+- transição entre tema claro e escuro.
+
+A galeria permanece sem zona exclusiva e sem foco. Ela será substituída pelas superfícies reais quando a infraestrutura do Marco 4 estiver pronta.
 
 ## Organização
 
 - `core/`: runtime, constantes, caminhos e logging.
 - `config/`: configuração central e valores padrão.
 - `theme/`: tokens visuais e coordenação de tema.
-- `components/`: componentes reutilizáveis, a partir do Marco 3.
+- `components/`: primitivas visuais reutilizáveis.
 - `services/`: integrações do sistema.
 - `models/`: modelos normalizados para a interface.
 - `modules/`: superfícies e funcionalidades de alto nível.
