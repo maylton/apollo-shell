@@ -5,7 +5,7 @@ import "../../theme" as Tokens
 Item {
     id: root
 
-    signal clicked
+    signal clicked()
 
     property string name: "Application"
     property string iconText: "A"
