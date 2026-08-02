@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=Apollo Shell
+GenericName=Desktop Shell
+Comment=Material Design 3 Expressive shell for Hyprland
+Exec=qs -c apollo-shell
+Icon=io.github.maylton.apollo-shell
+Terminal=false
+NoDisplay=true
+StartupNotify=false
+Categories=System;Utility;
+Keywords=Hyprland;Wayland;Quickshell;Shell;
