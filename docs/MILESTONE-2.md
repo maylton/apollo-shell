@@ -1,6 +1,6 @@
 # Marco 2 — Sistema visual compartilhado
 
-Status: **implementado na branch `feat/milestone-2-design-system` e aguardando validação de runtime**.
+Status: **implementado, validado no Hyprland e pronto para integração na `main`**.
 
 ## Entregas
 
@@ -18,7 +18,9 @@ Status: **implementado na branch `feat/milestone-2-design-system` e aguardando v
 - [x] Migração da superfície de diagnóstico para uso exclusivo dos tokens.
 - [x] Galeria interna para inspeção visual da paleta e dos papéis principais.
 - [x] Validação automatizada contra estilos duplicados na galeria.
+- [x] Validação de tipos QML utilizados sem os imports necessários.
 - [x] Metadados `.desktop` locais para eliminar o aviso do portal durante o desenvolvimento.
+- [x] Teste de execução real em Hyprland ao lado do Caelestia.
 
 ## Arquitetura
 
@@ -49,7 +51,7 @@ Tokens.Theme.motion
 
 ## Critério de conclusão
 
-O Marco 2 é considerado concluído quando:
+O Marco 2 foi validado com sucesso nos seguintes pontos:
 
 1. `./scripts/check-foundation.sh` passa sem erros;
 2. o Apollo inicia em uma sessão Wayland com Quickshell 0.3+;
@@ -58,7 +60,8 @@ O Marco 2 é considerado concluído quando:
 5. a escala de interface altera medidas e tipografia de forma consistente;
 6. desabilitar animações reduz as durações para zero;
 7. o processo não interfere na instância do Caelestia;
-8. o aviso de metadados ausentes do portal deixa de aparecer ao usar `run-dev.sh`.
+8. o aviso de metadados ausentes do portal deixa de aparecer ao usar `run-dev.sh`;
+9. o GitHub Actions conclui a validação com sucesso.
 
 ## Validação manual
 
@@ -81,9 +84,9 @@ Depois retorne para:
 
 A galeria deve trocar de paleta sem fechar o processo. Para encerrar apenas o Apollo, use `Ctrl+C` no terminal em que `run-dev.sh` está ativo.
 
-## Saída visual esperada
+## Saída visual
 
-Uma galeria arredondada no canto superior esquerdo apresenta:
+A galeria arredondada no canto superior esquerdo apresenta:
 
 - versão atual do Apollo;
 - monitor detectado;
