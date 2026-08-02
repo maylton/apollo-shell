@@ -6,6 +6,10 @@
 .cache/
 .local/
 
+# Python validation cache
+__pycache__/
+*.py[cod]
+
 # Editors
 .vscode/
 .idea/
