@@ -1,4 +1,4 @@
-name: Foundation checks
+name: Apollo checks
 
 on:
   push:
@@ -18,5 +18,5 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Validate Apollo foundation
+      - name: Validate Apollo foundation and theme
         run: ./scripts/check-foundation.sh
