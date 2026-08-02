@@ -8,12 +8,18 @@ Item {
     property bool indeterminate: false
     property color trackColor: Tokens.Theme.colors.surfaceContainerHighest
     property color indicatorColor: Tokens.Theme.colors.primary
+    property real animatedOffset: -indicator.width
 
     readonly property real normalizedValue: Math.max(0, Math.min(1, value))
 
     implicitWidth: Tokens.Theme.scaled(160)
     implicitHeight: Tokens.Theme.scaled(8)
     clip: true
+
+    onIndeterminateChanged: {
+        if (!indeterminate)
+            animatedOffset = -indicator.width
+    }
 
     Rectangle {
         anchors.fill: parent
@@ -28,7 +34,7 @@ Item {
             ? root.width * 0.35
             : root.width * root.normalizedValue
         height: root.height
-        x: root.indeterminate ? -width : 0
+        x: root.indeterminate ? root.animatedOffset : 0
         radius: Tokens.Theme.scaled(Tokens.Theme.shapes.pill)
         color: root.indicatorColor
 
@@ -40,17 +46,17 @@ Item {
                 easing.type: Tokens.Theme.motion.standardCurve
             }
         }
+    }
 
-        SequentialAnimation on x {
-            running: root.indeterminate && root.visible && Tokens.Theme.animationsEnabled
-            loops: Animation.Infinite
+    SequentialAnimation on animatedOffset {
+        running: root.indeterminate && root.visible && Tokens.Theme.animationsEnabled
+        loops: Animation.Infinite
 
-            NumberAnimation {
-                from: -indicator.width
-                to: root.width
-                duration: Tokens.Theme.animationDuration(Tokens.Theme.motion.extraLong * 2)
-                easing.type: Tokens.Theme.motion.standardCurve
-            }
+        NumberAnimation {
+            from: -indicator.width
+            to: root.width
+            duration: Tokens.Theme.animationDuration(Tokens.Theme.motion.extraLong * 2)
+            easing.type: Tokens.Theme.motion.standardCurve
         }
     }
 }
