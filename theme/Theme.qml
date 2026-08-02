@@ -21,6 +21,13 @@ Singleton {
 
     signal paletteChanged(bool dark)
 
+    onDarkChanged: {
+        Core.Logger.info(Core.Constants.themeCategory, "Color scheme changed", {
+            mode: root.modeName
+        })
+        root.paletteChanged(root.dark)
+    }
+
     function setDarkMode(enabled) {
         const normalizedValue = Boolean(enabled)
         if (AppConfig.Config.darkMode === normalizedValue)
@@ -39,16 +46,5 @@ Singleton {
 
     function animationDuration(baseDuration) {
         return motion.duration(baseDuration)
-    }
-
-    Connections {
-        target: AppConfig.Config
-
-        function onDarkModeChanged() {
-            Core.Logger.info(Core.Constants.themeCategory, "Color scheme changed", {
-                mode: root.modeName
-            })
-            root.paletteChanged(root.dark)
-        }
     }
 }
