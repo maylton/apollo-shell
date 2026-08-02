@@ -1,0 +1,9 @@
+{
+  "darkMode": false,
+  "animationsEnabled": true,
+  "interfaceScale": 1.0,
+  "launcherShortcut": "SUPER",
+  "showBootstrapSurface": true,
+  "debugLogging": false,
+  "hotReloadEnabled": true
+}
